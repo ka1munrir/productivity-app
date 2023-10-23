@@ -41,7 +41,6 @@ class User(db.Model, SerializerMixin):
     @validates('username', 'password_hash', 'email', 'phone_number', 'first_name', 'last_name')
     def validate_notNull(self, key, value):
         return value if value else ValueError(f'{key} must have a value')
-
 class ToDoList(db.Model, SerializerMixin):
     __tablename__ = 'to_do_lists_table'
 	# Add Serialization Rules
@@ -60,7 +59,6 @@ class ToDoList(db.Model, SerializerMixin):
     @validates('user_id', 'title')
     def validate_notNull(self, key, value):
         return value if value else ValueError(f'{key} must have a value')
-
 class ToDoItem(db.Model, SerializerMixin):
     __tablename__ = 'to_do_items_table'
 	# Add Serialization Rules
@@ -97,7 +95,6 @@ class ToDoItem(db.Model, SerializerMixin):
     def validate_urgency(self, key, importance):
         IMPORTANCE = ['Not Important', 'Important']
         return importance if importance in IMPORTANCE else ValueError(f'importance must be either {IMPORTANCE}')
-
 class ShoppingItem(db.Model, SerializerMixin):
     __tablename__ = 'shopping_items_table'
 	# Add Serialization Rules
