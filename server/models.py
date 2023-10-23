@@ -35,3 +35,89 @@ class User(db.Model, SerializerMixin):
             password.encode('utf-8')
         )
     #validations
+
+class ToDoList(db.Model, SerializerMixin):
+    __tablename__ = 'to_do_lists_table'
+	# Add Serialization Rules
+
+	# Columns
+    id = db.Column(db.Integer, primary_key=True)
+    user_id = db.Column(db.Integer, db.ForeignKey('users_table.id'))
+    title = db.Column(db.String)
+    repeats = db.Column(db.String)
+    # Add relationships
+
+	# Add association proxies
+
+    # Add validations
+
+class ToDoItem(db.Model, SerializerMixin):
+    __tablename__ = 'to_do_items_table'
+	# Add Serialization Rules
+
+	# Columns
+    id = db.Column(db.Integer, primary_key=True)
+    toDoList_id = db.Column(db.Integer, db.ForeignKey('to_do_lists_table.id'))
+    event_id = db.Column(db.Integer, db.ForeignKey('events_table.id'))
+    title = db.Column(db.String)
+    description = db.Column(db.String)
+    start_date = db.Column(db.String)
+    end_date = db.Column(db.String)
+    completion_status = db.Column(db.String)
+    # Add relationships
+
+	# Add association proxies
+
+    # Add validations
+
+class ShoppingItem(db.Model, SerializerMixin):
+    __tablename__ = 'shopping_items_table'
+	# Add Serialization Rules
+
+	# Columns
+    id = db.Column(db.Integer, primary_key=True)
+    user_id = db.Column(db.Integer, db.ForeignKey('users_table.id'))
+    title = db.Column(db.String)
+    quantity = db.Column(db.Integer)
+    location = db.Column(db.String)
+    category = db.Column(db.String)
+    # Add relationships
+
+	# Add association proxies
+
+    # Add validations
+
+class shopLocation(db.Model, SerializerMixin):
+    __tablename__ = 'shop_locations_table'
+	# Add Serialization Rules
+
+	# Columns
+    id = db.Column(db.Integer, primary_key=True)
+    user_id = db.Column(db.Integer, db.ForeignKey('users_table.id'))
+    title = db.Column(db.String)
+    usage = db.Column(db.Integer)
+    # Add relationships
+
+	# Add association proxies
+
+    # Add validations
+
+class Event(db.Model, SerializerMixin):
+    __tablename__ = 'events_table'
+	# Add Serialization Rules
+
+	# Columns
+    id = db.Column(db.Integer, primary_key=True)
+    user_id = db.Column(db.Integer, db.ForeignKey('users_table.id'))
+    title = db.Column(db.String)
+    description = db.Column(db.String)
+    start_date = db.Column(db.String)
+    end_date = db.Column(db.String)
+    location = db.Column(db.String)
+    repeats = db.Column(db.String)
+    completion_status = db.Column(db.String)
+    # Add relationships
+
+	# Add association proxies
+
+    # Add validations
