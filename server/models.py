@@ -20,7 +20,7 @@ class User(db.Model, SerializerMixin):
     # Add relationships
     to_do_lists_rel = db.relationship('ToDoList', back_populates  = 'user_rel', cascade = 'all, delete-orphan')
     shopping_items_rel = db.relationship('ShoppingItem', back_populates  = 'user_rel', cascade = 'all, delete-orphan')
-    shop_locations_rel = db.relationship('ShopLocation', back_populates  = 'user_rel', cascade = 'all, delete-orphan')
+    locations_rel = db.relationship('Location', back_populates  = 'user_rel', cascade = 'all, delete-orphan')
     events_rel = db.relationship('Event', back_populates  = 'user_rel', cascade = 'all, delete-orphan')
     #password stuff
     @hybrid_property
@@ -76,7 +76,7 @@ class ToDoItem(db.Model, SerializerMixin):
     importance = db.Column(db.String)
     # Add relationships
     to_do_list_rel = db.relationship('ToDoList', back_populates = 'to_do_items_rel')
-    event_rel = db.relationship('Event', back_populates = 'to_do_item_rel', cascade = 'all, delete-orphan')
+    event_rel = db.relationship('Event', back_populates = 'to_do_item_rel')
 	# Add association proxies
 
     # Add validations
@@ -102,29 +102,32 @@ class ShoppingItem(db.Model, SerializerMixin):
 	# Columns
     id = db.Column(db.Integer, primary_key=True)
     user_id = db.Column(db.Integer, db.ForeignKey('users_table.id'))
+    location_id = db.Column(db.Integer, db.ForeignKey('locations_table.id'))
     title = db.Column(db.String)
     quantity = db.Column(db.Integer)
-    location = db.Column(db.String)
     category = db.Column(db.String)
     # Add relationships
     user_rel = db.relationship('User', back_populates = 'shopping_items_rel')
+    location_rel = db.relationship('Location', back_populates = 'shopping_items_rel')
 	# Add association proxies
 
     # Add validations
-    @validates('user_id', 'title', 'quantity', 'location', 'category')
+    @validates('user_id', 'title', 'quantity', 'location_id', 'category')
     def validate_notNull(self, key, value):
         return value if value else ValueError(f'{key} must have a value')
-class ShopLocation(db.Model, SerializerMixin):
-    __tablename__ = 'shop_locations_table'
+class Location(db.Model, SerializerMixin):
+    __tablename__ = 'locations_table'
 	# Add Serialization Rules
-    serialize_rules = ('-user_rel',)
+    serialize_rules = ('-user_rel', 'events_rel', 'shopping_items_rel')
 	# Columns
     id = db.Column(db.Integer, primary_key=True)
     user_id = db.Column(db.Integer, db.ForeignKey('users_table.id'))
     title = db.Column(db.String)
     usage = db.Column(db.Integer)
     # Add relationships
-    user_rel = db.relationship('User', back_populates = 'shop_locations_rel')
+    user_rel = db.relationship('User', back_populates = 'locations_rel')
+    shopping_items_rel = db.relationship('ShoppingItem', back_populates = 'location_rel')
+    events_rel = db.relationship('Event', back_populates = 'location_rel')
 	# Add association proxies
 
     # Add validations
@@ -134,19 +137,20 @@ class ShopLocation(db.Model, SerializerMixin):
 class Event(db.Model, SerializerMixin):
     __tablename__ = 'events_table'
 	# Add Serialization Rules
-    serialize_rules = ('-to_do_list_rel', '-to_do_item_rel')
+    serialize_rules = ('-user_rel', '-to_do_item_rel')
 	# Columns
     id = db.Column(db.Integer, primary_key=True)
     user_id = db.Column(db.Integer, db.ForeignKey('users_table.id'))
+    location_id = db.Column(db.Integer, db.ForeignKey('locations_table.id'))
     title = db.Column(db.String)
     description = db.Column(db.String)
     start_date = db.Column(db.String)
     end_date = db.Column(db.String)
-    location = db.Column(db.String)
     repeats = db.Column(db.String)
     # Add relationships
     user_rel = db.relationship('User', back_populates = 'events_rel')
     to_do_item_rel = db.relationship('ToDoItem', back_populates = 'event_rel', cascade = 'all, delete-orphan')
+    location_rel = db.relationship('Location', back_populates = 'events_rel')
 	# Add association proxies
 
     # Add validations

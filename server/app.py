@@ -8,8 +8,24 @@ from flask_restful import Resource
 
 # Local imports
 from config import app, db, api
-from models import User, ToDoList, ToDoItem, ShoppingItem, ShopLocation
-# Add your model imports
+from models import User, ToDoList, ToDoItem, ShoppingItem, Location, Event
+
+
+def locationPost(user_id, title, usage):
+    try:
+        new_location = Location(
+            user_id=user_id,
+            title=title,
+            usage=usage
+        )
+    except ValueError as e:
+        return {"errors": str(e)}, 400
+        
+
+    db.session.add(new_location)
+    db.session.commit()
+
+    return new_location.to_dict(), 200
 
 
 # Views go here!
@@ -229,13 +245,26 @@ api.add_resource(ToDoItemById_Route, '/todoitems/<int:id>')
 
 class ShoppingItem_Route(Resource):
     def post(self):
+        shoppingItemData = request.get_json()
+        user_id = shoppingItemData.get('user_id')
+        title = shoppingItemData.get('location')
+
+        location = Location.query.filter_by(user_id = user_id).filter_by(title = title).first()
+        if location:
+            location_id = location.get('id')
+        else:
+            x =locationPost(user_id=user_id, title=title, usage=1)
+            if x[1] == 200:
+                location_id = x[0].get('id')
+            else:
+                return x
         try:
             new_shoppingItem = ShoppingItem(
-                user_id=request.get_json().get('user_id'),
-                title=request.get_json().get('title'),
-                quantity=request.get_json().get('quantity'),
-                location=request.get_json().get('location'),
-                category=request.get_json().get('category')
+                user_id=user_id,
+                title=shoppingItemData.get('title'),
+                quantity=shoppingItemData.get('quantity'),
+                location_id=location_id,
+                category=shoppingItemData.get('category')
             )
         except ValueError as e:
             return {"errors": str(e)}, 400
@@ -285,73 +314,92 @@ class ShoppingItemById_Route(Resource):
             return {"error": "shoppingItem not found"}, 404
 api.add_resource(ShoppingItemById_Route, '/shoppingitems/<int:id>')
 
-class ShopLocation_Route(Resource):
+class Location_Route(Resource):
     def post(self):
-        try:
-            new_shopLocation = ShopLocation(
-                user_id=request.get_json().get('user_id'),
-                title=request.get_json().get('title'),
-                usage=request.get_json().get('usage')
-            )
-        except ValueError as e:
-            return {"errors": str(e)}, 400
+        x = locationPost(
+            user_id=request.get_json().get('user_id'),
+            title=request.get_json().get('title'),
+            usage=request.get_json().get('usage')
+        )
+        print(x)
+        return x
+        # try:
+        #     new_location = Location(
+        #         user_id=request.get_json().get('user_id'),
+        #         title=request.get_json().get('title'),
+        #         usage=request.get_json().get('usage')
+        #     )
+        # except ValueError as e:
+        #     return {"errors": str(e)}, 400
             
 
-        db.session.add(new_shopLocation)
-        db.session.commit()
+        # db.session.add(new_location)
+        # db.session.commit()
 
-        return new_shopLocation.to_dict(), 200
-api.add_resource(ShopLocation_Route, '/shoplocations')
-class ShopLocationById_Route(Resource):
+        # return new_location.to_dict(), 200
+api.add_resource(Location_Route, '/locations')
+class LocationById_Route(Resource):
     def get(self, id):
-        shopLocation = ShopLocation.query.filter_by(id=id).first()
-        if shopLocation:
-            return shopLocation.to_dict(), 200
-        return {"error": "shopLocation not found"}, 404
+        location = Location.query.filter_by(id=id).first()
+        if location:
+            return location.to_dict(), 200
+        return {"error": "location not found"}, 404
     def patch(self, id):
-        shopLocation = ShopLocation.query.filter_by(id=id).first()
+        location = Location.query.filter_by(id=id).first()
 
-        if shopLocation:
+        if location:
             dtp = request.get_json()
             errors = []
             for attr in dtp:
                 try:
-                    setattr(shopLocation, attr, dtp[attr])
+                    setattr(location, attr, dtp[attr])
                 except ValueError as e:
                     errors.append(e.__repr__())
             if len(errors) != 0:
                 return {"errors": errors}, 400
             else:
-                db.session.add(shopLocation)
+                db.session.add(location)
                 db.session.commit()
-                return shopLocation.to_dict(), 202
+                return location.to_dict(), 202
         
-        return {"error": "shopLocation not found"}, 404
+        return {"error": "location not found"}, 404
     
     def delete(self, id):
-        shopLocation = ShopLocation.query.filter_by(id=id).first()
-        if shopLocation:
+        location = Location.query.filter_by(id=id).first()
+        if location:
             try:
-                db.session.delete(shopLocation)
+                db.session.delete(location)
                 db.session.commit()
                 return '', 204
             except Exception:
-                return 'Something went wrong in the shopLocation deletion process', 400
+                return 'Something went wrong in the location deletion process', 400
         else:
-            return {"error": "shopLocation not found"}, 404
-api.add_resource(ShopLocationById_Route, '/shoplocations/<int:id>')
+            return {"error": "location not found"}, 404
+api.add_resource(LocationById_Route, '/locations/<int:id>')
 
 class Event_Route(Resource):
     def post(self):
+        eventData = request.get_json()
+        user_id = eventData.get('user_id')
+        title = eventData.get('location')
+        location = Location.query.filter_by(user_id = user_id).filter_by(title = title).first()
+        if location:
+            location_id = location.get('id')
+        else:
+            x =locationPost(user_id=user_id, title=title, usage=1)
+            if x[1] == 200:
+                location_id = x[0].get('id')
+            else:
+                return x
         try:
             new_event = Event(
-                user_id=request.get_json().get('user_id'),
-                title=request.get_json().get('title'),
-                description=request.get_json().get('description'),
-                start_date=request.get_json().get('start_date'),
-                end_date=request.get_json().get('end_date'),
-                location=request.get_json().get('location'),
-                repeats=request.get_json().get('repeats')
+                user_id=user_id,
+                title=eventData.get('title'),
+                description=eventData.get('description'),
+                start_date=eventData.get('start_date'),
+                end_date=eventData.get('end_date'),
+                location_id=location_id,
+                repeats=eventData.get('repeats')
             )
         except ValueError as e:
             return {"errors": str(e)}, 400
