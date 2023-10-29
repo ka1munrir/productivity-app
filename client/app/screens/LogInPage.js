@@ -48,7 +48,7 @@ export default function LogIn() {
             <Text style={styles.lables}>Username:</Text>
             <TextInput 
               style={styles.inputs}
-              onChangeText={console.log}
+              onChangeText={(value) => setUsername(value)}
             />
           </View>
           <View style={styles.inputContainer}>
@@ -57,6 +57,7 @@ export default function LogIn() {
               style={styles.inputs}
               placeholder='Password'
               secureTextEntry={true}
+              onChangeText={(value) => setPassword(value)}
             />
           </View>
           <Button

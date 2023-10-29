@@ -14,7 +14,6 @@ class User(db.Model, SerializerMixin):
     username = db.Column(db.String, unique=True)
     _password_hash = db.Column(db.String)
     email = db.Column(db.String)
-    phone_number = db.Column(db.String)
     first_name = db.Column(db.String)
     last_name = db.Column(db.String)
     # Add relationships

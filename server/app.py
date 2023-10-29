@@ -74,7 +74,6 @@ class Users_Route(Resource):
                 first_name=request.get_json()['first_name'],
                 last_name=request.get_json()['last_name'],
                 email=request.get_json()['email'],
-                phone_number=request.get_json()['phone_number'],
                 username=request.get_json()['username'],
                 password_hash=request.get_json()['password']
             )
