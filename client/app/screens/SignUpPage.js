@@ -8,10 +8,11 @@ import { signUp } from '../network/userAPI';
 import useSWR from 'swr';
 
 
-export default function SignUp() {
+export default function SignUp({ navigation }) {
+    const { setUser } = useUserStore();
     
     return (
-    <KeyboardAvoidingView behavior={Platform.OS === 'ios' ? 'padding' : 'height'} style={{ flex: 1 }}>
+    <KeyboardAvoidingView behavior={'padding'} style={{ flex: 1 }}>
         <ScrollView style={{flex: 1}}>
             <View style={styles.container}>
                 <Text style={styles.title}>Sign Up</Text>
@@ -29,9 +30,9 @@ export default function SignUp() {
                         email: Yup.string().required('Required').email('Invalid email address'),
                         username: Yup.string().required('Required'),
                         password: Yup.string().required('Required')
-                            // .min(8, 'Username should be over 7 characters long')
-                            // .matches(/[a-zA-Z]/, 'Password must contain at least one letter.')
-                            // .matches(/[!@#$%^&*()_+\-=\[\]{};':"\\|,.<>\/?]+/, 'Password must contain at least one special character.'),
+                            .min(8, 'Password should be over 7 characters long')
+                            .matches(/[a-zA-Z]/, 'Password must contain at least one letter.')
+                            .matches(/[!@#$%^&*()_+\-=\[\]{};':"\\|,.<>\/?]+/, 'Password must contain at least one special character.'),
                     })}
                     onSubmit={(values) => {
                         const userObject = {
@@ -43,8 +44,14 @@ export default function SignUp() {
                         };
 
                         signUp(userObject)
-                        .then(data => console.log(data))
-                        .catch(err => console.log(err))                    
+                        .then(resp => {
+                            console.log(resp);
+                            setUser(resp['data'])
+                            navigation.navigate('login')
+                        })
+                        .catch(err => {
+                            console.log(`ERROR: ${err.response.status} ${err.response.statusText} - ${err.response.data.errors}`)
+                        })                    
                     }}
                 >
                     {({ handleChange, handleBlur, handleSubmit, values, touched, errors, isValid }) => (

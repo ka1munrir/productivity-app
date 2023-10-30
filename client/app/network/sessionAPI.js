@@ -1,4 +1,4 @@
-import api from './axiosInstance';
+import {axiosInstance as api} from './axiosInstance';
 import useUserStore from '../../hooks/userStore'
 
 export async function checkSessions() {

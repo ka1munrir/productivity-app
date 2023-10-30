@@ -4,13 +4,13 @@
 
 # Remote library imports
 from flask import request, session
-from flask_restful import Resource
-
+from flask_restful import Resource, reqparse
+import json
 # Local imports
 from config import app, db, api
 from models import User, ToDoList, ToDoItem, ShoppingItem, Location, Event
 
-
+parser = reqparse.RequestParser()
 def locationPost(user_id, title, usage):
     try:
         new_location = Location(
@@ -68,23 +68,33 @@ class Users_Route(Resource):
         users = [user.to_dict() for user in User.query.all()]
         return users, 200
     def post(self):
+        print('hello')
+
+        # data2 = request.get_data().decode("utf-8")
+        # json_data=json.loads(data2)
+        # dataJSON = json.loads()
+        # print(json_data)
+        # print(f'thing: {data.get("test")}')
         # print(request.get_json())
+        json_data = request.get_json()
         try:
             new_user = User(
-                first_name=request.get_json()['first_name'],
-                last_name=request.get_json()['last_name'],
-                email=request.get_json()['email'],
-                username=request.get_json()['username'],
-                password_hash=request.get_json()['password']
+                first_name=json_data['first_name'],
+                last_name=json_data['last_name'],
+                email=json_data['email'],
+                username=json_data['username'],
+                password_hash=json_data['password']
             )
-        except ValueError as e:
+            db.session.add(new_user)
+            db.session.commit()
+            print("Hello")
+
+            return new_user.to_dict(), 200
+        except Exception as e:
+            print("Error")
             return {"errors": str(e)}, 400
             
 
-        db.session.add(new_user)
-        db.session.commit()
-
-        return new_user.to_dict(), 200
 api.add_resource(Users_Route, '/users')
 class UserById_Route(Resource):
     def get(self, id):
