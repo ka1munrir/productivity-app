@@ -4,30 +4,30 @@ import { SafeAreaView } from "react-native-safe-area-context";
 import {colorVars} from '../../colors';
 import {React, useState} from 'react';
 import useUserStore from '../../hooks/userStore'
+import { logIn } from '../network/sessionAPI';
 
 export default function LogIn() {
   const { setUser } = useUserStore()
-  const {username, setUsername} = useState('')
-  const {password, setPassword} = useState('')
+  const [username, setUsername] = useState('')
+  const [password, setPassword] = useState('')
 
 
-  const handleSubmit = (e) => {
-    e.preventDefault();
-
-    const userObject = { "username": username, "password": password }
+  const handleSubmit = () => {
+    const loginObj = { "username": username, "password": password }
     
     logIn(loginObj)
     .then(resp => {
-      setUser(resp.data)
+      setUser(resp)
+      console.log(resp)
       navigation.navigate('loggedinapp')
     })
     .catch(err => {
-      console.log(`ERROR: ${err.response.status} ${err.response.statusText} - ${err.response.data.errors}`)
+      console.log(`ERROR: ${err}`)
     });
   };
 
   return (
-    <KeyboardAvoidingView behavior={Platform.OS === 'ios' ? 'padding' : 'height'} style={{ flex: 1 }}>
+    <KeyboardAvoidingView behavior={'padding'} style={{ flex: 1 }}>
       <View style={styles.container}>
         <Text style={styles.title}>Log In</Text>
         <View style={styles.formContainer}>
@@ -35,6 +35,8 @@ export default function LogIn() {
             <Text style={styles.lables}>Username:</Text>
             <TextInput 
               style={styles.inputs}
+              placeholder='Username'
+              value={username}
               onChangeText={(value) => setUsername(value)}
             />
           </View>
@@ -44,6 +46,7 @@ export default function LogIn() {
               style={styles.inputs}
               placeholder='Password'
               secureTextEntry={true}
+              value={password}
               onChangeText={(value) => setPassword(value)}
             />
           </View>

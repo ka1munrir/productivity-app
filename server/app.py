@@ -10,7 +10,7 @@ import json
 from config import app, db, api
 from models import User, ToDoList, ToDoItem, ShoppingItem, Location, Event
 
-parser = reqparse.RequestParser()
+# parser = reqparse.RequestParser()
 def locationPost(user_id, title, usage):
     try:
         new_location = Location(
@@ -36,19 +36,24 @@ def index():
 
 class Login_Route(Resource):
     def post(self):
-        data = request.get_json()
-        username = data['username']
-        password = data['password']
-
-        user = User.query.filter_by(username=username).first()
-# sourcery skip: merge-nested-ifs
-        if user:
-            if user.authenticate(password):
-                session['user_id'] = user.id
-                return user.to_dict(), 200
-            else:
-                return {"Error": "Password is incorrect"}, 401
-        return {"Error": "User doesn't exist"}, 401
+        try:
+            data = request.get_json()
+            username = data['username']
+            password = data['password']
+            print('data')
+            user = User.query.filter_by(username=username).first()
+            print("User: ", user)
+    # sourcery skip: merge-nested-ifs
+            if user:
+                if user.authenticate(password):
+                    print("Auth")
+                    session['user_id'] = user.id
+                    return user.to_dict(), 200
+                else:
+                    return {"Error": "Password is incorrect"}, 401
+        except Exception as e:
+            print(e)
+            return {"Error": f'{e}'}, 401
 api.add_resource(Login_Route, '/login')
 class Logout_Route(Resource):
     def delete(self):
@@ -460,5 +465,6 @@ api.add_resource(EventById_Route, '/names/<int:id>')
 
 
 if __name__ == '__main__':
-    app.run(host='0.0.0.0', port=5000, debug=True, ssl_context='adhoc')
+    app.run(host='0.0.0.0', port=5000, debug=True)
+    # app.run(host='0.0.0.0', port=5000, debug=True, ssl_context='adhoc')
     

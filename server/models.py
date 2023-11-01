@@ -117,7 +117,7 @@ class ShoppingItem(db.Model, SerializerMixin):
 class Location(db.Model, SerializerMixin):
     __tablename__ = 'locations_table'
 	# Add Serialization Rules
-    serialize_rules = ('-user_rel', 'events_rel', 'shopping_items_rel')
+    serialize_rules = ('-user_rel', '-events_rel', '-shopping_items_rel')
 	# Columns
     id = db.Column(db.Integer, primary_key=True)
     user_id = db.Column(db.Integer, db.ForeignKey('users_table.id'))

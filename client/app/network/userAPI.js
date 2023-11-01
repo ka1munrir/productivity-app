@@ -7,6 +7,7 @@ export async function signUp(userObj){
         
     // fetch('http://172.30.135.18:5000/users', {
     //     method: 'POST',
+    //     mode: 'no-cors',
     //     headers: {
     //         'Content-Type': 'application/json',
     //     },
