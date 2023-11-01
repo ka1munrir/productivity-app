@@ -3,11 +3,13 @@ import React from 'react'
 import { colorVars } from '../../colors'
 
 export default function LandingPage({ navigation }) {
+
   return (
     <View style={styles.container}>
       <Text style={styles.title}>Productivity App</Text>
       <Button style={styles.signUpButton} title='Sign Up' onPress={() => {navigation.navigate('signup')}}/>
       <Button style={styles.loginButton} title='Log In' onPress={() => {navigation.navigate('login')}}/>
+      <Button style={styles.loginButton} title='Test' onPress={() => {navigation.navigate('teststuff')}}/>
     </View>
   )
 }

@@ -5,7 +5,8 @@ import { Formik } from 'formik';
 import * as Yup from 'yup';
 import useUserStore from '../../hooks/userStore'
 import { signUp } from '../network/userAPI';
-import useSWR from 'swr';
+import { logIn } from '../network/sessionAPI';
+// import useSWR from 'swr';
 
 
 export default function SignUp({ navigation }) {
@@ -42,15 +43,33 @@ export default function SignUp({ navigation }) {
                             "username": values.username,
                             "password": values.password
                         };
-
+                        const loginObj = {
+                            "username": values.username,
+                            "password": values.password
+                        }
+                        // const { data, error } = useSWR("userObject", signUp(userObject), {
+                        //     onSuccess:(data, key, config) =>{
+                        //         console.log(data);
+                        //         console.log(key);
+                        //         console.log(config);
+                        //     }
+                        // })
+                        // console.log(data);
+                        // console.log(error);
                         signUp(userObject)
                         .then(resp => {
                             console.log(resp);
-                            setUser(resp['data'])
-                            navigation.navigate('login')
+                            logIn(loginObj)
+                            .then(resp => {
+                                setUser(resp.data)
+                                navigation.navigate('loggedinapp')
+                            })
+                            .catch(err => {
+                                console.log(`ERROR: ${err}`)
+                            });
                         })
                         .catch(err => {
-                            console.log(`ERROR: ${err.response.status} ${err.response.statusText} - ${err.response.data.errors}`)
+                            console.log(`ERROR: ${err}`)
                         })                    
                     }}
                 >

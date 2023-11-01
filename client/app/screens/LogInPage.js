@@ -15,29 +15,16 @@ export default function LogIn() {
     e.preventDefault();
 
     const userObject = { "username": username, "password": password }
-
-    fetch('http://127.0.0.1:5000/login', {
-      method: 'POST',
-      headers: {
-        'Content-Type': 'application/json'
-      },
-      body: JSON.stringify(userObject)
+    
+    logIn(loginObj)
+    .then(resp => {
+      setUser(resp.data)
+      navigation.navigate('loggedinapp')
     })
-      .then(response => {
-        if (!response.ok) {
-          throw new Error(`${response.json()}`);
-        }
-        return response.json();
-      })
-      .then(data => {
-        console.log(data);
-        setUser(data)
-        // Navigate home
-      })
-      .catch(error => {
-        console.log("error", error.message);
-      })
-    };
+    .catch(err => {
+      console.log(`ERROR: ${err.response.status} ${err.response.statusText} - ${err.response.data.errors}`)
+    });
+  };
 
   return (
     <KeyboardAvoidingView behavior={Platform.OS === 'ios' ? 'padding' : 'height'} style={{ flex: 1 }}>

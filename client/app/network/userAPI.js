@@ -15,4 +15,7 @@ export async function signUp(userObj){
     // .then(r=>r.json())
     // .then(data => console.log(data))
 }
-    
+
+export async function getAllUsers(){
+    return await api.get("/users")
+}
