@@ -39,7 +39,7 @@ if __name__ == '__main__':
             db.session.commit()
         print("Finished seeding users_table")
         print("Seeding locations_table...")
-        for _ in range(50):
+        for _ in range(150):
             l = Location(
                 user_id = randint(1, 15),
                 title = fake.company(),
@@ -54,12 +54,14 @@ if __name__ == '__main__':
         ]
         ingredient_categories = ["Flour and Grains", "Sugar and Sweeteners", "Dairy and Alternatives", "Fats and Oils", "Herbs and Spices", "Sauces and Condiments", "Meat and Protein", "Legumes and Beans", "Vegetables", "Fruits", "Nuts and Seeds", "Beverages", "Bakery", "Snacks", "Dressings and Dips" # Add more categories as needed
         ]
-
+        
 
         for _ in range(150):
+            user_id = randint(1, 15)
+            locations = Location.query.filter_by(user_id = user_id).all()
             si = ShoppingItem(
-                user_id = randint(1, 15),
-                location_id = randint(1, 50),
+                user_id = user_id,
+                location_id = rc(locations).id,
                 title = rc(ingredient_list),
                 quantity = randint(1, 30),
                 category = rc(ingredient_categories)
