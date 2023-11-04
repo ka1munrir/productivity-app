@@ -4,19 +4,11 @@ import useUserStore from '../../hooks/userStore';
 
 export async function signUp(userObj){
     return await api.post('/users', userObj);
-        
-    // fetch('http://172.30.135.18:5000/users', {
-    //     method: 'POST',
-    //     mode: 'no-cors',
-    //     headers: {
-    //         'Content-Type': 'application/json',
-    //     },
-    //     body: JSON.stringify(userObj),
-    // })
-    // .then(r=>r.json())
-    // .then(data => console.log(data))
+}
+export async function patchUser(userObj){
+    return await api.patch(`/users/${userObj.id}`, userObj)
 }
 
-export async function getAllUsers(){
-    return await api.get("/users")
+export async function deleteUser(id){
+    return await api.delete("/users", id)
 }

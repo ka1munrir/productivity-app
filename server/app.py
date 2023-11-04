@@ -265,7 +265,7 @@ class ShoppingItem_Route(Resource):
 
         location = Location.query.filter_by(user_id = user_id).filter_by(title = title).first()
         if location:
-            location_id = location.get('id')
+            location_id = location.to_dict().get('id')
         else:
             x =locationPost(user_id=user_id, title=title, usage=1)
             if x[1] == 200:
@@ -280,7 +280,7 @@ class ShoppingItem_Route(Resource):
                 location_id=location_id,
                 category=shoppingItemData.get('category')
             )
-        except ValueError as e:
+        except Exception as e:
             return {"errors": str(e)}, 400
             
 

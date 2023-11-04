@@ -47,20 +47,12 @@ export default function SignUp({ navigation }) {
                             "username": values.username,
                             "password": values.password
                         }
-                        // const { data, error } = useSWR("userObject", signUp(userObject), {
-                        //     onSuccess:(data, key, config) =>{
-                        //         console.log(data);
-                        //         console.log(key);
-                        //         console.log(config);
-                        //     }
-                        // })
-                        // console.log(data);
-                        // console.log(error);
                         signUp(userObject)
                         .then(resp => {
                             console.log(resp);
                             logIn(loginObj)
                             .then(resp => {
+                                // console.log(resp);
                                 setUser(resp.data)
                                 navigation.navigate('loggedinapp')
                             })

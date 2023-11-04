@@ -17,8 +17,8 @@ export default function LogIn() {
     
     logIn(loginObj)
     .then(resp => {
-      setUser(resp)
-      console.log(resp)
+      setUser(resp.data)
+      // console.log(resp)
       navigation.navigate('loggedinapp')
     })
     .catch(err => {
