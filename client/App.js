@@ -8,11 +8,9 @@ import OnboardingPage from './app/screens/OnboardingPage';
 import LandingPage from './app/screens/LandingPage';
 import LogIn from './app/screens/LogInPage';
 import SignUp from './app/screens/SignUpPage';
-import TestGetStuff from './app/screens/TestGetStuff';
 import LoggedInApp from './app/screens/loggedInScreens/LoggedInApp';
 
 import useUserStore from './hooks/userStore';
-
 
 export default function App() {
   const Stack = createNativeStackNavigator();
@@ -24,7 +22,6 @@ export default function App() {
         <Stack.Screen name="landing" component={LandingPage}/>
         <Stack.Screen name="login" component={LogIn} />
         <Stack.Screen name="signup" component={SignUp} />
-        <Stack.Screen name="teststuff" component={TestGetStuff} />
         <Stack.Screen name="loggedinapp" component={LoggedInApp} />
       </Stack.Navigator>
     </NavigationContainer>

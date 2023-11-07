@@ -6,7 +6,7 @@ import {React, useState} from 'react';
 import useUserStore from '../../hooks/userStore'
 import { logIn } from '../network/sessionAPI';
 
-export default function LogIn() {
+export default function LogIn({ navigation }) {
   const { setUser } = useUserStore()
   const [username, setUsername] = useState('')
   const [password, setPassword] = useState('')
@@ -54,6 +54,10 @@ export default function LogIn() {
             style={styles.button}
             title='Log In'
             onPress={() => handleSubmit()}/>
+        </View>
+        <View style={{flex: .5, flexDirection: 'row'}}>
+          <Text style={{color: colorVars.text}}>Don't have an account? </Text>
+          <Text style={{color: '#2096f2'}} onPress={() => {navigation.navigate('signup')}}>Sign Up</Text>
         </View>
       </View>
     </KeyboardAvoidingView>

@@ -1,4 +1,4 @@
-import { StyleSheet, Text, TextInput, View , KeyboardAvoidingView, Button, ScrollView} from 'react-native';
+import { StyleSheet, Text, TextInput, View , KeyboardAvoidingView, Button, ScrollView, TouchableOpacity} from 'react-native';
 import {colorVars} from '../../colors';
 import {React, useState} from 'react';
 import { Formik } from 'formik';
@@ -14,7 +14,7 @@ export default function SignUp({ navigation }) {
     
     return (
     <KeyboardAvoidingView behavior={'padding'} style={{ flex: 1 }}>
-        <ScrollView style={{flex: 1}}>
+        <ScrollView style={{flex: 1}} showsVerticalScrollIndicator={false}>
             <View style={styles.container}>
                 <Text style={styles.title}>Sign Up</Text>
                 <Formik
@@ -125,10 +125,13 @@ export default function SignUp({ navigation }) {
                             />
                             {touched.password && errors.password ? (<Text style={styles.errorMessage}>{errors.password}</Text>) : null}
                         </View>
-                        <Button
-                        style={styles.button}
-                        title='Sign Up'
-                        onPress={() => handleSubmit()}/>
+                        <TouchableOpacity style={styles.button} onPress={() => handleSubmit()}>
+                            <Text style={{color: colorVars.text, fontWeight: 700}}>Sign Up</Text>
+                        </TouchableOpacity>
+                        <View style={{flex: 1, flexDirection: 'row', marginTop: 10}}>
+                            <Text style={{color: colorVars.text}}>Already have an account? </Text>
+                            <Text style={{color: '#2096f2'}} onPress={() => {navigation.navigate('login')}}>Log In</Text>
+                        </View>
                     </View>
                     )}
                 </Formik>
@@ -156,6 +159,9 @@ const styles = StyleSheet.create({
       width: '100%',
       marginBottom: 150,
       padding: 50,
+      flex: 1,
+      justifyContent: 'center',
+      alignItems: 'center',
     },
     doubledUp: {
         width: '100%',
@@ -189,8 +195,13 @@ const styles = StyleSheet.create({
         fontSize: 10, 
     },
     button: {
-      backgroundColor: colorVars.primary,
-      color: colorVars.secondary,
-      borderWidth: 1,
+        backgroundColor: '#2096f2', 
+        paddingVertical: 10, 
+        borderRadius: 7, 
+        marginTop: 10, 
+        width: '100%', 
+        flex: 1, 
+        justifyContent: 'center',
+        alignItems: 'center',
     }
   });

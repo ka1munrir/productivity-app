@@ -1,4 +1,10 @@
-import { StyleSheet, View, Text, Button } from 'react-native'
+import { 
+  StyleSheet, 
+  View, 
+  Text,
+  TouchableOpacity,
+  TouchableHighlight
+ } from 'react-native'
 import React from 'react'
 import { colorVars } from '../../colors'
 
@@ -6,10 +12,15 @@ export default function LandingPage({ navigation }) {
 
   return (
     <View style={styles.container}>
-      <Text style={styles.title}>Productivity App</Text>
-      <Button style={styles.signUpButton} title='Sign Up' onPress={() => {navigation.navigate('signup')}}/>
-      <Button style={styles.loginButton} title='Log In' onPress={() => {navigation.navigate('login')}}/>
-      <Button style={styles.loginButton} title='Test' onPress={() => {navigation.navigate('teststuff')}}/>
+      <View style={styles.titleCont}>
+        <Text style={styles.title}>Productivity App</Text>
+      </View>
+      <TouchableOpacity style={[styles.button, styles.signUpButton]} onPress={() => {navigation.navigate('signup')}}>
+        <Text style={styles.buttonText}>Sign Up</Text>
+      </TouchableOpacity>
+      <TouchableOpacity style={[styles.button, styles.loginButton]} onPress={() => {navigation.navigate('login')}}>
+        <Text style={styles.buttonText}>Log In</Text>
+      </TouchableOpacity>
     </View>
   )
 }
@@ -18,7 +29,11 @@ const styles = StyleSheet.create({
     container:{
         flex: 1,
         backgroundColor: colorVars.background,
-        paddingTop: 275,
+    },
+    titleCont:{
+      flex: 6,
+      justifyContent: 'center',
+      alignItems: 'center',
     },
     title:{
         color: colorVars.text,
@@ -27,10 +42,19 @@ const styles = StyleSheet.create({
         paddingHorizontal: 45,
         marginBottom: 50,
     },
-    loginButton:{
-
+    button:{
+      flex: 1,
+      alignItems: 'center',
+      justifyContent: 'center',
     },
     signUpButton:{
-
+      backgroundColor: colorVars.primary,
     },
+    loginButton:{
+      backgroundColor: colorVars.secondary,
+    },
+    buttonText:{
+      color: colorVars.text,
+      fontSize: 20,
+    }
 })
