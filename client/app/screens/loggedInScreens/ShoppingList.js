@@ -11,19 +11,18 @@ import {
   Button
 } from 'react-native'
 import { SwipeListView } from 'react-native-swipe-list-view';
-import Svg, { Path, Polygon, G } from "react-native-svg";
 import RBSheet from "react-native-raw-bottom-sheet";
 import { Formik } from 'formik';
 import * as Yup from 'yup';
-import React, { useRef, useState } from 'react'
+import React, { useRef } from 'react'
 import { colorVars } from '../../../colors'
-import { postShoppingItem } from '../../network/shoppingItemAPI';
 import useUserStore from '../../../hooks/userStore';
 
 export default function ShoppingList() {
   const { shoppingItems, addShoppingItem, editShoppingItem, removeShoppingItem, user } = useUserStore();
   const refNewShoppingItemRBSheet = useRef();
   const refEditShoppingItemRBSheet = useRef();
+  
   const VisibleItem = props => {
     const { data } = props;
     const { id, title, quantity, location_rel, category } = data.item;
@@ -364,7 +363,6 @@ const styles = StyleSheet.create({
   },
   buttonText: {
     color: colorVars.text,
-
   },
   rowBack: {
     alignItems: 'center',

@@ -70,7 +70,7 @@ if __name__ == '__main__':
             db.session.commit()
         print("Finished seeding shopping_items_table")
         print("Seeding to_do_lists_table...")
-        for _ in range(20):
+        for _ in range(75):
             tdl = ToDoList(
                 user_id = randint(1, 15),
                 title = fake.company(),
@@ -80,9 +80,9 @@ if __name__ == '__main__':
             db.session.commit()
         print("Finished seeding to_do_lists_table")
         print("Seeding to_do_items_table...")
-        for _ in range(150):
+        for _ in range(400):
             tdi = ToDoItem(
-                toDoList_id = randint(1, 20),
+                toDoList_id = randint(1, 50),
                 event_id = None,
                 title = fake.text(max_nb_chars=10),
                 description = fake.paragraph(nb_sentences=5),
