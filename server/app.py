@@ -209,14 +209,14 @@ class ToDoItem_Route(Resource):
                 urgency=request.get_json().get('urgency'),
                 importance=request.get_json().get('importance')
             )
-        except ValueError as e:
+            db.session.add(new_toDoItem)
+            db.session.commit()
+
+            return new_toDoItem.to_dict(), 200
+        except Exception as e:
             return {"errors": str(e)}, 400
             
 
-        db.session.add(new_toDoItem)
-        db.session.commit()
-
-        return new_toDoItem.to_dict(), 200
 api.add_resource(ToDoItem_Route, '/todoitems')
 class ToDoItemById_Route(Resource):
     def get(self, id):

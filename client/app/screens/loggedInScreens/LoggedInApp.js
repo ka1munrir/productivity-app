@@ -5,6 +5,7 @@ import { FontAwesome5, FontAwesome  } from '@expo/vector-icons';
 
 import ShoppingList from './ShoppingList';
 import TaskLists from './TaskLists';
+import Profile from './Profile';
 import { colorVars } from '../../../colors';
 
 const Tab = createBottomTabNavigator();
@@ -26,6 +27,16 @@ export default function LoggedInApp() {
                     tabBarLabel: "Groceries",
                     tabBarIcon: ({ color, size }) => (
                         <FontAwesome name="shopping-basket" size={size} color={color} />
+                    ),
+                }}
+            />
+            <Tab.Screen 
+                name="Profile"
+                component={Profile}
+                options={{
+                    tabBarLabel: "Profile",
+                    tabBarIcon: ({ color, size }) => (
+                        <FontAwesome5 name="user-circle" size={size} color={color} />
                     ),
                 }}
             />

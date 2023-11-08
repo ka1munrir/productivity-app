@@ -8,7 +8,7 @@ import { colorVars } from '../../../colors'
 import TaskListExpandable from '../../components/TaskListExpandable'
 import useUserStore from '../../../hooks/userStore';
 
-export default function TaskLists() {
+export default function TaskLists({navigation}) {
     const { user, toDoLists, addToDoList } = useUserStore()
     const newTaskListForm = useRef();
 
@@ -16,7 +16,7 @@ export default function TaskLists() {
         <SafeAreaView style={styles.container}>
             <ScrollView style={styles.listContainer} showsVerticalScrollIndicator={false}>
                 {
-                    toDoLists.map(toDoList => <TaskListExpandable data={toDoList} key={toDoList.id} />)
+                    toDoLists.map(toDoList => <TaskListExpandable data={toDoList} navigation={navigation} key={toDoList.id} />)
                 }
             </ScrollView>
             <TouchableOpacity style={{ width: 40, height: 40, justifyContent: 'center', alignItems: 'center', marginVertical: 20 }}>
