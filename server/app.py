@@ -147,14 +147,14 @@ class ToDoList_Route(Resource):
                 title=request.get_json().get('title'),
                 repeats=request.get_json().get('repeats')
             )
-        except ValueError as e:
+        except Exception as e:
             return {"errors": str(e)}, 400
             
 
         db.session.add(new_toDoList)
         db.session.commit()
 
-        return new_name.to_dict(), 200
+        return new_toDoList.to_dict(), 200
 api.add_resource(ToDoList_Route, '/todolists')
 class ToDoListById_Route(Resource):
     def get(self, id):
