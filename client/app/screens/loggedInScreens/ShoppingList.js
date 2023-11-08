@@ -45,6 +45,10 @@ export default function ShoppingList() {
           closeOnDragDown={true}
           closeOnPressMask={true}
           customStyles={{
+            container:{
+              height:350,
+              padding: 20,
+            },
             wrapper: {
               backgroundColor: "transparent"
             },
@@ -202,6 +206,10 @@ export default function ShoppingList() {
         closeOnDragDown={true}
         closeOnPressMask={true}
         customStyles={{
+          container:{
+            height:350,
+            padding: 20,
+          },
           wrapper: {
             backgroundColor: "transparent"
           },
@@ -242,6 +250,7 @@ export default function ShoppingList() {
                   <TextInput
                     style={styles.inputs}
                     placeholder='ex. Bread'
+                    placeholderTextColor={'rgba(0, 0, 0, 0.6)'}
                     value={values.title}
                     onChangeText={handleChange('title')}
                     onBlur={handleBlur('title')}
@@ -253,6 +262,7 @@ export default function ShoppingList() {
                   <TextInput
                     style={styles.inputs}
                     placeholder='ex. Target'
+                    placeholderTextColor={'rgba(0, 0, 0, 0.6)'}
                     value={values.location}
                     onChangeText={handleChange('location')}
                     onBlur={handleBlur('location')}
@@ -276,6 +286,7 @@ export default function ShoppingList() {
                   <TextInput
                     style={styles.inputs}
                     placeholder='ex. Produce'
+                    placeholderTextColor={'rgba(0, 0, 0, 0.6)'}
                     value={values.category}
                     onChangeText={handleChange('category')}
                     onBlur={handleBlur('category')}
@@ -381,4 +392,17 @@ const styles = StyleSheet.create({
     marginVertical: 10,
     width: '49%',
   },
+  labels:{
+    fontSize: 15,
+    fontWeight: 500,
+    marginBottom:5,
+  }, 
+  inputs:{
+    borderWidth: 1,
+    borderRadius: 5,
+    padding: 10,
+  },
+  errorMessage:{
+    color: 'red'
+  }
 })
