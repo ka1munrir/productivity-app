@@ -74,7 +74,7 @@ if __name__ == '__main__':
             tdl = ToDoList(
                 user_id = randint(1, 15),
                 title = fake.company(),
-                repeats = rc(["EveryDay", "Monday", "Tuesday", "Wednesday", "Thursday", "Friday", "Saturday", "Sunday", "Yearly", "Monthly"])
+                repeats = rc(['Never', 'Never', 'Never', 'Never', 'Never', 'Never', 'Never', 'Never', 'Never', 'Never', 'Never', 'Never', 'Never', 'Never', 'Never', 'Never', 'Never', 'Yearly', 'Monthly', 'Weekly', 'Daily'])
             )
             db.session.add(tdl)
             db.session.commit()

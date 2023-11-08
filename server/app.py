@@ -171,7 +171,7 @@ class ToDoListById_Route(Resource):
             for attr in dtp:
                 try:
                     setattr(toDoList, attr, dtp[attr])
-                except ValueError as e:
+                except Exception as e:
                     errors.append(e.__repr__())
             if len(errors) != 0:
                 return {"errors": errors}, 400

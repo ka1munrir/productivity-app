@@ -21,7 +21,7 @@ import RBSheet from "react-native-raw-bottom-sheet";
 import useUserStore from '../../hooks/userStore';
 
 export default function TaskListExpandable({ data, navigation }) {
-    const { id, title, to_do_items_rel } = data;
+    const { id, title, repeats, to_do_items_rel } = data;
     const { addTask, editTask, removeTask, addToDoList, editToDoList, removeToDoList } = useUserStore();
     const [expanded, setExpanded] = useState(false)
 
@@ -104,8 +104,13 @@ export default function TaskListExpandable({ data, navigation }) {
                     <Text style={expandableListStyles.topLevelTitle} numberOfLines={1}>{title.length > 13 ? title.slice(0, 13) + "..." : title}</Text>
                 </View>
                 <View style={expandableListStyles.topLevelIconContainer}>
-                    <Entypo name="add-to-list" size={24} color={colorVars.text} onPress={() => newTaskForm.current.open()}/>
-                    <Ionicons name="settings-outline" size={24} color={colorVars.text} onPress={() => refSettings.current.open()} />
+                    <Entypo name="add-to-list" size={24} color={colorVars.text} onPress={() => newTaskForm.current.open()} />
+                    <Ionicons name="settings-outline" size={24} color={colorVars.text} onPress={() => {
+                        refSettings.current.props.children.props.initialValues.id = id
+                        refSettings.current.props.children.props.initialValues.title = title
+                        refSettings.current.props.children.props.initialValues.repeats = repeats
+                        refSettings.current.open()
+                        }} />
                     {
                         expanded ? <Entypo name="chevron-up" size={24} color="white" onPress={() => setExpanded(false)} /> : <Entypo name="chevron-down" size={24} color="white" onPress={() => setExpanded(true)} />
                     }
@@ -134,9 +139,6 @@ export default function TaskListExpandable({ data, navigation }) {
                 closeOnDragDown={true}
                 closeOnPressMask={true}
                 customStyles={{
-                    // container:{
-                    //     backgroundColor: 'rgb(135, 135, 135)'
-                    // },
                     wrapper: {
                         backgroundColor: 'rgba(0, 0, 0, 0.6)',
                     },
@@ -145,34 +147,83 @@ export default function TaskListExpandable({ data, navigation }) {
                     },
                 }}
             >
-                <View style={taskListPopUpStyles.inputContainer}>
-                    <Text style={taskListPopUpStyles.inputLabel}>Name: </Text>
-                    <TextInput
-                        editable={true}
-                        style={taskListPopUpStyles.input}
-                        placeholder='To Do List'
-                    // value={changedTitle}
-                    // onChange={(text) => setChangedTitle(text)}
-                    />
-                </View>
-                <View style={taskListPopUpStyles.buttonContainer}>
-                    <TouchableOpacity style={[taskListPopUpStyles.button, taskListPopUpStyles.editButton]}>
-                        <Text style={[taskListPopUpStyles.buttonText, taskListPopUpStyles.editText]}>Edit</Text>
-                    </TouchableOpacity>
-                    <TouchableOpacity style={[taskListPopUpStyles.button, taskListPopUpStyles.deleteButton]} onPress={() => {
-                        refSettings.current.close();
-                        removeToDoList(id);
-                    }}>
-                        <Text style={[taskListPopUpStyles.buttonText, taskListPopUpStyles.deleteText]}>Delete</Text>
-                    </TouchableOpacity>
-                </View>
+                <Formik
+                    initialValues={{
+                        id: 0,
+                        title: "",
+                        repeats: ""
+                    }}
+                    validationSchema={Yup.object({
+                        title: Yup.string().required('Required'),
+                        repeats: Yup.string(),
+                    })}
+                    onSubmit={(values) => {
+                        const toDoListObj = {
+                            "id": values.id,
+                            "title": values.title,
+                            "repeats": values.repeats,
+                        };
+                        editToDoList(toDoListObj)
+                        refSettings.current.close()
+                        // console.log(toDoListObj)
+                    }}
+                >
+                    {({ handleChange, handleBlur, handleSubmit, values, touched, errors, isValid }) => (
+
+                        <View style={{ flex: 1, flexDirection: 'column', alignItems: 'space-evenly', width: '100%', paddingVertical: 30, }}>
+                            <View style={{flex: 1, flexDirection: 'row', justifyContent: 'space-evenly', paddingHorizontal: 40}}>
+                                <View style={{ margin: 10 }}>
+                                    <Text style={newTaskListFormStyles.inputLabel}>Name: </Text>
+                                    <TextInput
+                                        onChangeText={handleChange('title')}
+                                        onBlur={handleBlur('title')}
+                                        value={values.title}
+                                        placeholder='ex. Morning Routine'
+                                        placeholderTextColor={'rgba(0, 0, 0, 0.75)'}
+                                        style={{ padding: 10, fontSize: 15, width: 150, borderWidth: 1, borderColor: 'rgba(0, 0, 0, 0.5)', borderRadius: 5 }}
+                                    />
+                                    {touched.title && errors.title ? (<Text style={{ color: 'red' }}>{errors.title}</Text>) : null}
+                                </View>
+                                <View style={{margin:10}}>
+                                    <Text style={newTaskListFormStyles.inputLabel}>Repeats: </Text>
+                                    <SelectDropdown
+                                        data={['Never', 'Yearly', 'Monthly', 'Weekly', 'Daily']}
+                                        onSelect={handleChange('repeats')}
+                                        buttonTextAfterSelection={(selectedItem, index) => {
+                                            return selectedItem
+                                        }}
+                                        rowTextForSelection={(item, index) => {
+                                            return item
+                                        }}
+                                        buttonStyle={{ width: 150, height: 'auto', paddingHorizontal: 10, paddingVertical: 10 }}
+                                        buttonTextStyle={{ fontSize: 15 }}
+                                        dropdownStyle={{ height: 'auto' }}
+                                        defaultValue={values.repeats}
+                                    />
+                                </View>
+                            </View>
+                            <View style={taskListPopUpStyles.buttonContainer}>
+                                <TouchableOpacity style={[taskListPopUpStyles.button, taskListPopUpStyles.editButton]} onPress={handleSubmit}>
+                                    <Text style={[taskListPopUpStyles.buttonText, taskListPopUpStyles.editText]}>Edit</Text>
+                                </TouchableOpacity>
+                                <TouchableOpacity style={[taskListPopUpStyles.button, taskListPopUpStyles.deleteButton]} onPress={() => {
+                                    refSettings.current.close();
+                                    removeToDoList(id);
+                                }}>
+                                    <Text style={[taskListPopUpStyles.buttonText, taskListPopUpStyles.deleteText]}>Delete</Text>
+                                </TouchableOpacity>
+                            </View>
+                        </View>
+                    )}
+                </Formik>
             </RBSheet>
+
             <RBSheet
                 ref={newTaskForm}
                 closeOnDragDown={true}
                 closeOnPressMask={true}
                 customStyles={{
-                    container:{
+                    container: {
                         height: 350,
                     },
                     wrapper: {
@@ -187,8 +238,8 @@ export default function TaskListExpandable({ data, navigation }) {
                     initialValues={{
                         title: '',
                         description: '',
-                        urgency: '',
-                        importance: ''
+                        urgency: 'Not Urgent',
+                        importance: 'Not Important'
                     }}
                     validationSchema={Yup.object({
                         title: Yup.string().required('Required'),
@@ -221,7 +272,7 @@ export default function TaskListExpandable({ data, navigation }) {
                                         onChangeText={handleChange('title')}
                                         onBlur={handleBlur('title')}
                                         value={values.title}
-                                        placeholder='ex. Morning Routine'
+                                        placeholder='Read 10 mins'
                                         placeholderTextColor={'rgba(0, 0, 0, 0.75)'}
                                         style={{ padding: 10, fontSize: 15, width: 150, borderWidth: 1, borderColor: 'rgba(0, 0, 0, 0.5)', borderRadius: 5 }}
                                     />
@@ -233,7 +284,7 @@ export default function TaskListExpandable({ data, navigation }) {
                                         onChangeText={handleChange('description')}
                                         onBlur={handleBlur('description')}
                                         value={values.description}
-                                        placeholder='ex. Morning Routine'
+                                        placeholder='Read Becoming a better person for 10 mins'
                                         placeholderTextColor={'rgba(0, 0, 0, 0.75)'}
                                         style={{ padding: 10, fontSize: 15, width: 150, borderWidth: 1, borderColor: 'rgba(0, 0, 0, 0.5)', borderRadius: 5 }}
                                     />
@@ -401,12 +452,11 @@ const taskListPopUpStyles = StyleSheet.create({
     button: {
         borderRadius: 5,
         borderWidth: 5,
-        paddingHorizontal: 20,
-        paddingVertical: 10,
-        justifyContent: 'space-evenly',
+        margin: 10,
+        justifyContent: 'center',
         alignItems: 'center',
         width: 100,
-        margin: 10,
+        height: 50,
     },
     buttonText: {
         fontSize: 15,
@@ -428,8 +478,8 @@ const taskListPopUpStyles = StyleSheet.create({
 })
 const newTaskListFormStyles = StyleSheet.create({
     inputLabel: {
-        marginBottom: 5, 
-        fontSize: 20, 
+        marginBottom: 5,
+        fontSize: 20,
         fontWeight: 500
     },
     button: {
