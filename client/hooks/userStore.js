@@ -131,7 +131,7 @@ const userStore = (set) => ({
   removeTask: (task) => {
     deleteToDoItem(task.id);
     set((state) => ({
-      toDoList: [...state.toDoLists.map(toDoList => {
+      toDoLists: [...state.toDoLists.map(toDoList => {
         if (toDoList.id === task.toDoList_id){
           toDoList.to_do_items_rel = [...toDoList.to_do_items_rel.filter(toDoItem => toDoItem.id !== task.id)];
         }
