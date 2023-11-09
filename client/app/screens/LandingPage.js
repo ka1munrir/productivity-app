@@ -13,7 +13,7 @@ export default function LandingPage({ navigation }) {
   return (
     <View style={styles.container}>
       <View style={styles.titleCont}>
-        <Text style={styles.title}>Productivity App</Text>
+        <Text style={styles.title}>To-Do App</Text>
       </View>
       <TouchableOpacity style={[styles.button, styles.signUpButton]} onPress={() => {navigation.navigate('signup')}}>
         <Text style={styles.buttonText}>Sign Up</Text>
