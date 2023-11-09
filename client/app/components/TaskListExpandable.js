@@ -121,7 +121,7 @@ export default function TaskListExpandable({ data, navigation }) {
                     data={to_do_items_rel.filter((toDoItem) => toDoItem.completion_status === 'Not Started')}
                     renderItem={renderItem}
                     renderHiddenItem={renderHiddenItem}
-                    leftOpenValue={75}
+                    // leftOpenValue={75}
                     rightOpenValue={-75}
                     recalculateHiddenLayout={true}
                 />
@@ -129,7 +129,7 @@ export default function TaskListExpandable({ data, navigation }) {
                     data={to_do_items_rel.filter((toDoItem) => toDoItem.completion_status !== 'Not Started')}
                     renderItem={renderItem}
                     renderHiddenItem={renderHiddenItem}
-                    leftOpenValue={75}
+                    // leftOpenValue={75}
                     rightOpenValue={-75}
                     recalculateHiddenLayout={true}
                 />
