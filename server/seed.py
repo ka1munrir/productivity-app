@@ -39,7 +39,7 @@ if __name__ == '__main__':
             db.session.commit()
         print("Finished seeding users_table")
         print("Seeding locations_table...")
-        for _ in range(150):
+        for _ in range(550):
             l = Location(
                 user_id = randint(1, 15),
                 title = fake.company(),
@@ -56,7 +56,7 @@ if __name__ == '__main__':
         ]
         
 
-        for _ in range(150):
+        for _ in range(950):
             user_id = randint(1, 15)
             locations = Location.query.filter_by(user_id = user_id).all()
             si = ShoppingItem(
@@ -70,7 +70,7 @@ if __name__ == '__main__':
             db.session.commit()
         print("Finished seeding shopping_items_table")
         print("Seeding to_do_lists_table...")
-        for _ in range(75):
+        for _ in range(175):
             tdl = ToDoList(
                 user_id = randint(1, 15),
                 title = fake.company(),
@@ -80,9 +80,9 @@ if __name__ == '__main__':
             db.session.commit()
         print("Finished seeding to_do_lists_table")
         print("Seeding to_do_items_table...")
-        for _ in range(400):
+        for _ in range(10000):
             tdi = ToDoItem(
-                toDoList_id = randint(1, 50),
+                toDoList_id = randint(1, 175),
                 event_id = None,
                 title = fake.text(max_nb_chars=10),
                 description = fake.paragraph(nb_sentences=5),
